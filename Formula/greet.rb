@@ -4,6 +4,8 @@ class Greet < Formula
   version "0.1.0"
   license "MIT"
 
+  bottle :unneeded
+
   on_macos do
     if Hardware::CPU.arm?
       url "https://github.com/antonioaguilar/homebrew-greet/releases/download/v#{version}/greet-macos-arm64"
