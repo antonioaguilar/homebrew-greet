@@ -52,38 +52,48 @@ jobs:
           SHA256_LINUX_ARM64: ${{ steps.sha256.outputs.linux_arm64 }}
           SHA256_LINUX_X64: ${{ steps.sha256.outputs.linux_x64 }}
         run: |
-          VERSION="${TAG#v}"  # strip leading 'v'
-          python3 - <<'EOF'
+          export VERSION="${TAG#v}"
+          python3 - <<'PYEOF'
           import os, re
 
           formula_path = "Formula/greet.rb"
           with open(formula_path, "r") as f:
               content = f.read()
 
-          version   = os.environ["VERSION"]
-          m_arm64   = os.environ["SHA256_MACOS_ARM64"]
-          m_x64     = os.environ["SHA256_MACOS_X64"]
-          l_arm64   = os.environ["SHA256_LINUX_ARM64"]
-          l_x64     = os.environ["SHA256_LINUX_X64"]
+          version = os.environ["VERSION"]
+          m_arm64 = os.environ["SHA256_MACOS_ARM64"]
+          m_x64   = os.environ["SHA256_MACOS_X64"]
+          l_arm64 = os.environ["SHA256_LINUX_ARM64"]
+          l_x64   = os.environ["SHA256_LINUX_X64"]
 
+          # Update version line
           content = re.sub(r'version "[^"]+"', f'version "{version}"', content)
-          content = content.replace("PLACEHOLDER_SHA256_MACOS_ARM64", m_arm64)
-          content = content.replace("PLACEHOLDER_SHA256_MACOS_X64",   m_x64)
-          content = content.replace("PLACEHOLDER_SHA256_LINUX_ARM64", l_arm64)
-          content = content.replace("PLACEHOLDER_SHA256_LINUX_X64",   l_x64)
 
-          # Also replace real hashes from previous releases
-          # (pattern: 64 hex chars on a sha256 line that doesn't match current)
-          def replace_sha(placeholder, real):
-              # already replaced above if placeholder; handle re-releases by
-              # matching the old real hash via context lines
-              pass  # covered by direct replacement above
+          # Replace SHA256 values — matches both PLACEHOLDER strings and real
+          # 64-char hex hashes from previous releases, keyed by surrounding context
+          sha_pattern = r'(?<={keyword}\n      sha256 ")[^"]+'
+
+          def patch_sha(content, url_fragment, new_hash):
+              return re.sub(
+                  r'(url "[^"]*' + re.escape(url_fragment) + r'[^"]*"\n      sha256 ")[^"]+(")',
+                  lambda m: m.group(1) + new_hash + m.group(2),
+                  content,
+              )
+
+          content = patch_sha(content, "greet-macos-arm64", m_arm64)
+          content = patch_sha(content, "greet-macos-x64",   m_x64)
+          content = patch_sha(content, "greet-linux-arm64", l_arm64)
+          content = patch_sha(content, "greet-linux-x64",   l_x64)
 
           with open(formula_path, "w") as f:
               f.write(content)
 
           print(f"Updated Formula/greet.rb to version {version}")
-          EOF
+          print(f"  macos-arm64: {m_arm64}")
+          print(f"  macos-x64:   {m_x64}")
+          print(f"  linux-arm64: {l_arm64}")
+          print(f"  linux-x64:   {l_x64}")
+          PYEOF
 
       - name: Commit and push updated formula
         run: |
