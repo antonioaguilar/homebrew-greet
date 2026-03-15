@@ -27,8 +27,8 @@ class Greet < Formula
   end
 
   def install
-    binary = Dir["#{buildpath}/greet-*"].first
-    bin.install binary => "greet"
+    binary_name = File.basename(stable.url)
+    bin.install binary_name => "greet"
   end
 
   test do
