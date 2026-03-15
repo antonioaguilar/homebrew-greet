@@ -1,19 +1,19 @@
 class Greet < Formula
   desc "A friendly CLI greeter"
-  homepage "https://github.com/USERNAME/homebrew-greet"
+  homepage "https://github.com/antonioaguilar/homebrew-greet"
   version "0.1.0"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/USERNAME/homebrew-greet/releases/download/v#{version}/greet-macos-arm64"
+      url "https://github.com/antonioaguilar/homebrew-greet/releases/download/v#{version}/greet-macos-arm64"
       sha256 "PLACEHOLDER_SHA256_MACOS_ARM64"
 
       def install
         bin.install "greet-macos-arm64" => "greet"
       end
     else
-      url "https://github.com/USERNAME/homebrew-greet/releases/download/v#{version}/greet-macos-x64"
+      url "https://github.com/antonioaguilar/homebrew-greet/releases/download/v#{version}/greet-macos-x64"
       sha256 "PLACEHOLDER_SHA256_MACOS_X64"
 
       def install
@@ -24,14 +24,14 @@ class Greet < Formula
 
   on_linux do
     if Hardware::CPU.arm?
-      url "https://github.com/USERNAME/homebrew-greet/releases/download/v#{version}/greet-linux-arm64"
+      url "https://github.com/antonioaguilar/homebrew-greet/releases/download/v#{version}/greet-linux-arm64"
       sha256 "PLACEHOLDER_SHA256_LINUX_ARM64"
 
       def install
         bin.install "greet-linux-arm64" => "greet"
       end
     else
-      url "https://github.com/USERNAME/homebrew-greet/releases/download/v#{version}/greet-linux-x64"
+      url "https://github.com/antonioaguilar/homebrew-greet/releases/download/v#{version}/greet-linux-x64"
       sha256 "PLACEHOLDER_SHA256_LINUX_X64"
 
       def install

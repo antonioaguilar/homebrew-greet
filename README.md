@@ -5,7 +5,7 @@ A friendly CLI greeter — built with TypeScript and Bun, distributed via Homebr
 ## Install via Homebrew
 
 ```sh
-brew tap USERNAME/greet
+brew tap antonioaguilar/greet
 brew install greet
 ```
 
@@ -24,7 +24,7 @@ greet --help              # usage info
 Requires [Bun](https://bun.sh) ≥ 1.0.
 
 ```sh
-git clone https://github.com/USERNAME/homebrew-greet
+git clone https://github.com/antonioaguilar/homebrew-greet
 cd homebrew-greet
 
 bun install           # install dev deps (@types/bun)
